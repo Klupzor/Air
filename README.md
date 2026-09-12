@@ -16,16 +16,17 @@ AIR is a methodology, not a tool. It's a specification, an Agent Skill, a set of
 |---|---|
 | [`SPEC.md`](SPEC.md) | The normative specification of AIR |
 | [`skill/SKILL.md`](skill/SKILL.md) | The Agent Skill that teaches a coding agent to follow AIR |
-| [`references/`](references/) | Detailed, operational guidance for Discovery, Implementation, and Context Impact |
+| [`references/`](references/) | Detailed, operational guidance for Discovery, Implementation, Context Impact, and Adoption |
 | [`templates/`](templates/) | Starting-point files for adopting AIR in a project |
 | [`examples/minimal-project/`](examples/minimal-project/) | A tiny fictional project showing AIR's structure in practice |
 
 ## Using AIR in a project
 
 - **New project:** copy the files under `templates/` into the project root and fill the Blueprint in as real knowledge accumulates.
-- **Existing project:** don't overwrite what's already there. `skill/SKILL.md` covers how an agent should inspect existing documentation and propose a mapping onto AIR's canonical categories instead of duplicating it.
+- **Existing project:** don't overwrite what's already there. `references/adoption.md` covers how an agent should inspect existing documentation and propose a mapping onto AIR's canonical categories instead of duplicating it.
+- **A second (or third) AI coding tool joins later:** it detects the existing AIR context, preserves it, and adds only its own integration — see `references/adoption.md`.
 
-Either way, once adopted, a project's own files are self-sufficient — following AIR never requires this repository to be present at runtime (`SPEC.md` §17).
+In every case, once adopted, a project's own files are self-sufficient — following AIR never requires this repository to be present at runtime (`SPEC.md` §17).
 
 ## Core ideas at a glance
 
@@ -36,6 +37,7 @@ Either way, once adopted, a project's own files are self-sufficient — followin
 | Blueprint | Durable project knowledge: architecture, domain, modules, rules, decisions | [`SPEC.md` §7](SPEC.md#7-blueprint) |
 | Features | What the product does, in product terms — not an API reference | [`SPEC.md` §8](SPEC.md#8-features) |
 | Context Impact | After implementing, decide whether durable knowledge actually changed | [`SPEC.md` §12](SPEC.md#12-context-impact) |
+| Tool Integration | Project context is canonical and shared; a tool's integration is only an adapter around it, never a duplicate | [`SPEC.md` §19](SPEC.md#19-project-context-and-tool-integration) |
 
 AIR is conceptually independent of any specific AI coding agent (`SPEC.md` §18).
 

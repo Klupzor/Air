@@ -200,7 +200,9 @@ If a document starts accumulating historical narrative, that content should move
 
 **New projects** can start directly with the structure in §3: an empty or minimal Blueprint, `AGENTS.md` and `PROJECT.md` from `templates/`, and no `current-task.md` until the first Discovery converges.
 
-**Existing projects** already have architecture notes, domain knowledge, or decision records somewhere — possibly not in AIR's canonical locations. AIR must not overwrite or duplicate that knowledge. Adoption in an existing project means inspecting what already exists, proposing a mapping onto AIR's canonical categories (which may mean pointing at an existing document rather than creating a new one), and asking the human before any reorganization that could destroy or obscure existing information. The operational checklist and example phrasing for this are in [`skill/SKILL.md`](skill/SKILL.md).
+**Existing projects** already have architecture notes, domain knowledge, or decision records somewhere — possibly not in AIR's canonical locations. AIR must not overwrite or duplicate that knowledge. Adoption in an existing project means inspecting what already exists, proposing a mapping onto AIR's canonical categories (which may mean pointing at an existing document rather than creating a new one), and asking the human before any reorganization that could destroy or obscure existing information. The operational checklist and example phrasing for this are in [`references/adoption.md`](references/adoption.md).
+
+A project's context can also outlive any single tool: adopting AIR again later, with the same tool or a different one, must reuse the Project Context that already exists rather than recreate it. §19 defines the rule that keeps a tool's own integration separate from that shared context.
 
 Either way, adoption is complete once the project's own files are sufficient for an agent to follow AIR without needing anything else (§17, Self-Hosting, below).
 
@@ -224,4 +226,23 @@ A project that has adopted AIR must remain understandable and operable even if t
 
 ## 18. Vendor Neutrality
 
-AIR is conceptually independent of any specific AI coding agent, including Claude Code, Codex, Cursor, and OpenCode. This specification and the files under `references/` and `templates/` contain no agent-specific assumptions. `skill/SKILL.md` uses a minimal, generic frontmatter format for practical loadability by compatible tooling, but the framework it describes does not depend on that format, and installation notes for specific agents (where a project chooses to document them) are not part of the core specification.
+AIR is conceptually independent of any specific AI coding agent, including Claude Code, Codex, Cursor, and OpenCode. This specification and the files under `references/` and `templates/` contain no agent-specific assumptions. `skill/SKILL.md` uses a minimal, generic frontmatter format for practical loadability by compatible tooling, but the framework it describes does not depend on that format, and installation notes for specific agents (where a project chooses to document them) are not part of the core specification. When more than one such tool works on a project over its lifetime, §19 defines how each tool's integration stays separate from the project's shared context.
+
+## 19. Project Context and Tool Integration
+
+A project's lifetime often spans more than one AI coding tool — for example Claude Code, Codex, Cursor, or OpenCode (§18), introduced at different points. AIR treats two things adoption produces as fundamentally different, and they must never be conflated:
+
+- **Project Context** — the durable knowledge defined in §3: `AGENTS.md`, `PROJECT.md`, the Blueprint, `features/`, and `current-task.md` when active. It is canonical and shared across every tool that works on the project.
+- **Tool Integration** — whatever instructions, Skill registration, or configuration a specific AI coding tool needs to discover and correctly apply AIR. It is specific to that tool and exists only to adapt the tool to the project's context.
+
+> The project's AIR context is canonical and shared. Tool integrations are adapters around that context.
+
+A Tool Integration points an agent at the Project Context; it never duplicates that context into a tool-specific document. When Project Context already exists and a new tool is introduced, adoption means reusing that context, adding only the integration the new tool is missing, and leaving every other tool's existing integration untouched unless the current tool genuinely requires it to change. Adoption is idempotent: running it again — for the same tool or a different one — never recreates Project Context that already exists, and never leaves behind more than one competing version of it.
+
+The exact mechanism for registering a Skill or configuring an instruction entry point is inherently tool-dependent, so this specification defines only the requirement, not the mechanism:
+
+> An AIR-compatible agent must be able to discover and apply the AIR workflow without requiring the project's durable context to be duplicated for that agent.
+
+Tool-specific mechanisms belong in operational guidance ([`references/adoption.md`](references/adoption.md)), not in this document, consistent with §2's separation of concerns. The objective throughout:
+
+> Adapt the agent to the project, not the project context to every agent.

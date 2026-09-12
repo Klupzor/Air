@@ -1,6 +1,6 @@
 ---
 name: air
-description: Use when a project has adopted the AIR (AI-Readable) framework, or when a human asks to adopt AIR into a project. Teaches Discovery, Implementation, and Context Impact workflows for progressively discovering project context and safely changing an AIR-organized project.
+description: Use when a project has adopted the AIR (AI-Readable) framework, or when a human asks to adopt AIR into a project — including a project another AI coding tool already adopted AIR into. Teaches Discovery, Implementation, Context Impact, and Adoption workflows for progressively discovering project context, integrating the current tool with it, and safely changing an AIR-organized project.
 ---
 
 This frontmatter is metadata for agent tooling that knows how to load skills this way; if your tooling doesn't use it, the rest of this document stands on its own.
@@ -12,7 +12,7 @@ AIR (AI-Readable) organizes a project's durable knowledge into a small set of ca
 ## When this Skill applies
 
 - The project has `PROJECT.md`, `AGENTS.md`, or a `blueprint/` directory — AIR is already in use.
-- Or: a human asks you to adopt AIR into a project that doesn't have these yet — see "Adopting AIR," below.
+- Or: a human asks you to adopt AIR into a project — whether or not it already has AIR's context, and whether or not the current tool has been integrated with it yet — see "Adopting AIR," below.
 
 ## Overview
 
@@ -27,10 +27,11 @@ This file stays short on purpose. Each phase below has one paragraph of guidance
 ## Step 0 — Orient
 
 1. Read `PROJECT.md` first. It's the map to everything else — don't read further until you know what it points to.
-2. Check whether `current-task.md` exists.
-   - **Doesn't exist**, and the project otherwise lacks AIR's structure entirely → go to "Adopting AIR," below.
-   - **Doesn't exist**, but AIR is already set up → go to "Discovery."
-   - **Exists** with `Status: READY` → go to "Implementation."
+2. Check whether AIR's project context exists, whether the current tool has its own integration yet, and whether `current-task.md` exists.
+   - **No AIR project context at all** → go to "Adopting AIR," below.
+   - **Project context exists, but the current tool has no integration yet** → go to "Adopting AIR," below (only the missing integration needs adding).
+   - **Project context exists, the current tool is already integrated, and `current-task.md` doesn't exist** → go to "Discovery."
+   - **`current-task.md` exists with `Status: READY`** → go to "Implementation."
 
 ## Discovery
 
@@ -76,28 +77,19 @@ If a canonical document and the actual code disagree, never silently pick a side
 
 ## Adopting AIR in a Project
 
-Use this when a project doesn't yet have AIR's structure — either it's new, or it's existing and has its knowledge organized some other way.
+Enter this whenever AIR's project context doesn't exist yet, or when it does but the AI coding tool you're currently running hasn't been integrated with it yet — a project's context is meant to outlive any single tool, so other tools joining later is expected, not exceptional.
 
-**New project:** copy `templates/AGENTS.md`, `templates/PROJECT.md`, `templates/blueprint/*`, and `templates/features/README.md` into the project as-is. Leave the Blueprint files minimal or empty until there's real content for them — don't fabricate project knowledge to fill them in.
+**Load [`references/adoption.md`](../references/adoption.md) and follow it in order:**
 
-**Existing project:** do not overwrite or duplicate what's already there.
+1. Identify the AI coding tool currently running.
+2. Detect whether AIR's project context already exists.
+3. Detect whether the current tool is already integrated.
+4. Identify what native Skill or instruction mechanism the current tool provides.
+5. Determine the minimum tool-specific integration required, and add or update only that — leaving project context and every other tool's integration untouched.
 
-1. Inspect the project for existing sources of project knowledge (READMEs, design docs, wikis, ADRs, code comments).
-2. Determine which existing documents already cover architecture, domain, rules, decisions, or features — even partially, even under different names.
-3. Propose a mapping onto AIR's canonical categories. An existing document that already serves as a canonical home can stay where it is — AIR doesn't require the project to physically match the template structure if an equivalent canonical location already exists.
-4. Ask the human before any reorganization that could destroy, obscure, or merge existing information. For example:
+If step 2 finds no project context at all, establish it first — from `templates/` for a new project, or by mapping existing project knowledge onto AIR's canonical categories for an existing one — before adding the current tool's integration. When the current tool has a native Skill mechanism, prefer installing or registering this Skill through it rather than reimplementing the workflow in a tool-specific format.
 
-   ```text
-   Existing architecture documentation appears to live in:
-   docs/architecture.md
-
-   I propose using that as the canonical architecture source rather than creating a duplicate blueprint/architecture.md.
-
-   Approve?
-   ```
-
-5. Preserve information — move or link rather than delete, unless the human explicitly approves removal.
-6. Avoid creating a duplicate document once a canonical one has been identified or agreed on.
+Project context and tool integration are never the same thing; the rule governing how they relate is in `SPEC.md` §19.
 
 ## Reference Index
 
@@ -106,10 +98,11 @@ Use this when a project doesn't yet have AIR's structure — either it's new, or
 | [`references/discovery.md`](../references/discovery.md) | Entering Discovery — any non-trivial or ambiguous request |
 | [`references/implementation.md`](../references/implementation.md) | `current-task.md` exists with `Status: READY` |
 | [`references/context-impact.md`](../references/context-impact.md) | After implementing and testing, before committing |
+| [`references/adoption.md`](../references/adoption.md) | Project doesn't have AIR yet, or the current tool isn't integrated with it yet |
 | [`templates/current-task.md`](../templates/current-task.md) | Creating a task at the end of Discovery |
 | [`templates/AGENTS.md`](../templates/AGENTS.md) | Adopting AIR into a new project |
 | [`templates/PROJECT.md`](../templates/PROJECT.md) | Adopting AIR into a new project |
 | [`templates/blueprint/`](../templates/blueprint/) | Adopting AIR, or creating a Blueprint category that doesn't exist yet |
 | [`templates/features/README.md`](../templates/features/README.md) | Writing or reviewing a feature document |
 
-Never load all three `references/` files up front "just in case" — each loads only when its own trigger fires. That's progressive context applied to AIR's own documentation, not just the project's.
+Never load all four `references/` files up front "just in case" — each loads only when its own trigger fires. That's progressive context applied to AIR's own documentation, not just the project's.
