@@ -79,6 +79,8 @@ If a canonical document and the actual code disagree, never silently pick a side
 
 Enter this whenever AIR's project context doesn't exist yet, or when it does but the AI coding tool you're currently running hasn't been integrated with it yet — a project's context is meant to outlive any single tool, so other tools joining later is expected, not exceptional.
 
+AIR itself may already be available to you, or a human may hand you the AIR repository (`https://github.com/Klupzor/Air`) to read it from instead — acquiring AIR is step zero of adopting it, and is covered by "Acquiring AIR" in the reference document below, not restated here.
+
 **Load [`references/adoption.md`](../references/adoption.md) and follow it in order:**
 
 1. Identify the AI coding tool currently running.
@@ -87,7 +89,7 @@ Enter this whenever AIR's project context doesn't exist yet, or when it does but
 4. Identify what native Skill or instruction mechanism the current tool provides.
 5. Determine the minimum tool-specific integration required, and add or update only that — leaving project context and every other tool's integration untouched.
 
-If step 2 finds no project context at all, establish it first — from `templates/` for a new project, or by mapping existing project knowledge onto AIR's canonical categories for an existing one — before adding the current tool's integration. When the current tool has a native Skill mechanism, prefer installing or registering this Skill through it rather than reimplementing the workflow in a tool-specific format.
+If step 2 finds no project context at all, establish it first — from `templates/` for a new project, or by mapping existing project knowledge onto AIR's canonical categories for an existing one — before adding the current tool's integration. Prefer installing or registering the canonical Skill through the current tool's native mechanism, when it has one, rather than reimplementing the workflow in a tool-specific format; if the tool doesn't allow automatic installation, that isn't an adoption failure — continue the rest of the workflow and give the human only the minimal manual instructions needed to enable the Skill for that tool.
 
 Project context and tool integration are never the same thing; the rule governing how they relate is in `SPEC.md` §19.
 
