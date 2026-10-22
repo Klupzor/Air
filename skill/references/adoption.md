@@ -19,9 +19,12 @@ Acquisition:
 
 Installation, decided once the current tool is identified:
 
-- **C — The tool can install or register Skills.** Install the repository's `skill/` folder whole, through the tool's own mechanism. Don't rewrite it into a tool-specific version of the workflow.
-- **D — The tool can't, or won't let you.** Adoption continues: use the Skill content you acquired, configure an instruction entry point if the tool has one, and finish by giving the human the minimal steps to install the Skill themselves — only steps you can establish reliably for that tool; never invent a command or path.
-- **E — An installed Skill is outdated.** Compare its `AIR Skill version` line with the repository's. If the repository's is newer, replace the whole installed folder; never patch or merge it, and never touch Project Context while doing so. If the repository is unreachable, keep using the installed copy.
+- **C — Install once per tool, in this order.** Always install the repository's `skill/` folder whole; never rewrite it into a tool-specific version of the workflow.
+  1. **Already installed for this tool, anywhere** — app-managed, global, or inside a project: that copy is the one. Update it in place (E); never add a second copy somewhere else.
+  2. **Not installed** — install it in the tool's app-managed or global location, so every project uses the same copy (for Claude Code, its global skills).
+  3. **The tool or app won't let you install it there** — ask the human whether to install it inside this repository instead. Install it in the repository only if they say yes.
+- **D — The Skill ends up not installed** (no location was possible, or the human declined the repository). Adoption continues: use the Skill content you acquired, configure an instruction entry point if the tool has one, and finish by giving the human the minimal steps to install the Skill themselves — only steps you can establish reliably for that tool; never invent a command or path.
+- **E — An installed Skill is outdated.** Compare its `AIR Skill version` line with the repository's; a missing line counts as outdated. If the repository's is newer, replace the whole installed folder where it is; never patch or merge it, and never touch Project Context while doing so. If you can't write where it's installed (an app-managed copy, for example), tell the human it's outdated and that it should be replaced with the repository's `skill/` folder — don't work around it by installing a copy elsewhere. If the repository is unreachable, keep using the installed copy.
 
 **Installing the Skill is preferred, never a prerequisite** — adoption succeeds the same way whether C or D applies.
 
@@ -32,7 +35,7 @@ Every adoption request answers these in order, before modifying anything:
 0. Acquire AIR (A or B above).
 1. Identify the AI coding tool you're running in.
 2. Detect whether Project Context already exists.
-3. Detect whether the current tool is already integrated, and whether its installed Skill is outdated (E).
+3. Detect whether the current tool is already integrated — including a Skill available to you from any location (app-managed, global, or in the project), not just files in the repository — and whether that Skill is outdated (E).
 4. Identify the tool's native mechanisms: Skill installation, an instruction file, both, or neither.
 5. Determine the minimum change — what's missing, nothing more.
 
@@ -103,15 +106,16 @@ When adoption runs in a project that already has AIR, report — don't fix — d
 - Template guidance copied in as project content, such as the features guidance file.
 - A live legacy knowledge store beside the Blueprint.
 - A READY `current-task.md` with no start commit, or on a branch other than the one it names.
+- A copy of the AIR Skill inside the project when the tool also has an app-managed or global copy.
 
 The owner decides what to do about each; any fix is an ordinary task for later.
 
 ## Worked example
 
-1. In a project without AIR, a human tells Claude Code: "Adopt AIR in this project. https://github.com/Klupzor/Air". Claude Code reads `skill/` from the repository (B), finds no Project Context, asks how to map the existing `docs/` (Existing project), establishes the context, installs the Skill (C), and validates.
-2. Later the human opens the project in OpenCode with the same request. OpenCode finds the context and Claude Code's integration, and adds only its own integration — installing the Skill if it can (C), or giving the human the steps (D). It doesn't touch the Blueprint, `PROJECT.md`, `features/`, or Claude Code's integration.
+1. In a project without AIR, a human tells Claude Code: "Adopt AIR in this project. https://github.com/Klupzor/Air". Claude Code reads `skill/` from the repository (B), finds no Project Context, asks how to map the existing `docs/` (Existing project), establishes the context, installs the Skill in Claude Code's global skills (C), and validates.
+2. Later the human opens the project in OpenCode with the same request. OpenCode finds the context and Claude Code's integration, and adds only its own integration — installing the Skill in OpenCode's global location if it can, or asking before installing it in the repository (C), or giving the human the steps (D). It doesn't touch the Blueprint, `PROJECT.md`, `features/`, or Claude Code's integration.
 3. Repeating the request in either tool changes nothing beyond the health-check report.
-4. After a new AIR version is released, "Update AIR in this project" in either tool replaces that tool's installed Skill folder (E). The Project Context is untouched.
+4. After a new AIR version is released, "Update AIR in this project" in either tool replaces that tool's installed Skill folder where it is — or, for an app-managed copy it can't write, tells the human to replace it (E). The Project Context is untouched.
 
 ## Not a tool registry
 

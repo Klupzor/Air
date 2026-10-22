@@ -18,6 +18,7 @@ Record the outcome however suits you; the scenarios themselves carry no results.
 | [`first-adoption.md`](first-adoption.md) | Adopting a project without AIR from the repository URL |
 | [`skill-not-installable.md`](skill-not-installable.md) | Adoption completes when the Skill can't be installed |
 | [`second-tool-joins.md`](second-tool-joins.md) | A second tool adds only its own integration; repeating changes nothing |
+| [`managed-skill-outdated.md`](managed-skill-outdated.md) | An outdated app-managed Skill is reported, not worked around with a repository copy |
 | [`ambiguous-request.md`](ambiguous-request.md) | Discovery asks instead of guessing |
 | [`plumbing-not-feature.md`](plumbing-not-feature.md) | An optional parameter doesn't touch `features/` |
 | [`deployment-event.md`](deployment-event.md) | Operational events don't become dated Blueprint entries |

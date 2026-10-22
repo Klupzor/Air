@@ -1,6 +1,6 @@
 # AIR Specification
 
-Version: 0.2.0
+Version: 0.2.1
 
 AIR (AI-Readable) is a project-organization and agent-workflow framework. This document is the normative specification of AIR: what it is, what it requires, and what it deliberately leaves out. It describes AIR independently of any particular AI vendor, coding agent, or tool.
 

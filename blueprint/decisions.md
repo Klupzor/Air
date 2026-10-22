@@ -16,7 +16,7 @@ Adoption requires only access to the Skill (already available, or read from the 
 
 ## D4: The Skill is a self-contained, versioned folder
 
-`skill/` is installed and updated as a whole, never patched or rewritten per tool. Installed copies compare their version line with the repository's to know when to update.
+`skill/` is installed and updated as a whole, never patched or rewritten per tool. Installed copies compare their version line with the repository's to know when to update. Each tool has one installed copy, updated in place: its app-managed or global location first, and a copy inside a project only with the owner's consent.
 
 ## D5: Minimal Skill frontmatter
 
