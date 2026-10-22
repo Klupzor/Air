@@ -13,6 +13,7 @@
 - Vocabulary and entity definitions — those belong in [`domain.md`](domain.md).
 - An exhaustive list of every module, file, or API endpoint — that belongs in [`modules.md`](modules.md); this file describes the shape of the system, not its inventory.
 - The history or rationale of *why* the architecture ended up this way — that belongs in [`decisions.md`](decisions.md); this file may link to a decision, but shouldn't reproduce its reasoning.
+- A deployment or status log. "Applied on <date>", rollout progress, and "previously…" narration belong in commit messages; this file states the system's shape as it is now.
 
 ## Suggested structure
 

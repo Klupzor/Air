@@ -3,7 +3,7 @@
 ## What belongs here
 
 - A map from module, package, or directory to the responsibility it owns.
-- Ownership boundaries — which part of the codebase is the canonical place to make a given kind of change. This is what resolves "which module actually owns X" when documentation and code disagree (see `SPEC.md` §11, Conflict Handling).
+- Ownership boundaries — which part of the codebase is the canonical place to make a given kind of change. This is what resolves "which module actually owns X" when documentation and code disagree.
 
 ## What does not belong here
 

@@ -1,6 +1,6 @@
 # AIR Specification
 
-Version: 0.1
+Version: 0.2.0
 
 AIR (AI-Readable) is a project-organization and agent-workflow framework. This document is the normative specification of AIR: what it is, what it requires, and what it deliberately leaves out. It describes AIR independently of any particular AI vendor, coding agent, or tool.
 
@@ -19,17 +19,17 @@ AIR is a methodology, not a tool. It is expressed entirely as Markdown files tha
 - **One active implementation contract.** A project has at most one `current-task.md`, containing the agreed intent of the work in progress. It is temporary by design.
 - **Durable knowledge lives in the Blueprint.** Stable facts about architecture, domain, modules, rules, and decisions belong in a small, fixed set of canonical documents — not scattered, not duplicated.
 - **Features describe capability, not implementation.** `features/` records what the product does, in product terms, not how it's coded.
-- **No duplicated canonical knowledge.** Every durable fact has exactly one canonical home. Other documents reference it; they do not restate it.
+- **No duplicated canonical knowledge.** Every durable fact has exactly one canonical home. Other documents reference it; they do not restate it. This holds across repositories too: a fact owned by another repository is referenced, not copied.
 - **Human decisions stay human.** An agent may analyze, recommend, and flag gaps. It must not invent a decision that materially affects product, domain, architecture, scope, or behavior.
 - **Conflicts are surfaced, never silently resolved.** When documentation and implementation disagree, the agent reports the conflict and asks, rather than picking a side.
 - **A clear separation of concerns governs AIR's own documents:**
   ```text
-  SPEC.md        = what AIR is (this document; normative principles)
-  references/    = how AIR is applied, in operational detail
-  skill/SKILL.md = how an agent activates and follows AIR
-  templates/     = how AIR is materialized in a project
+  SPEC.md            = what AIR is (this document; normative principles)
+  skill/SKILL.md     = how an agent activates and follows AIR
+  skill/references/  = how AIR is applied, in operational detail
+  skill/templates/   = how AIR is materialized in a project
   ```
-  This document states principles. It intentionally does not walk through step-by-step agent procedures — those live in `references/`, and are triggered by `skill/SKILL.md`. If a rule here starts reading like a procedure, that is a sign it belongs in a reference document instead.
+  This document states principles and rationale. It intentionally does not walk through step-by-step agent procedures — those live in `skill/references/`, triggered by `skill/SKILL.md`. If a rule here starts reading like a procedure, it belongs in a reference document instead. The `skill/` folder is AIR's deployable unit: it is installed whole and must be operationally complete on its own, without this document.
 
 ## 3. Project Context Model
 
@@ -41,7 +41,7 @@ A project adopting AIR exposes its knowledge through a small, fixed set of locat
 - **`features/`** — one document per meaningful product capability.
 - **`current-task.md`** — the single active implementation contract, present only while a task is in flight.
 
-No other canonical categories exist in v0.1. A project does not need a document for every category to have content in it yet — an empty or minimal Blueprint file is normal for a new project (see §15).
+No other canonical categories exist. A project does not need a document for every category to have content in it yet — an empty or minimal Blueprint file is normal for a new project (see §15).
 
 ## 4. Discovery Phase
 
@@ -69,11 +69,11 @@ Readiness check
 Create current-task.md
 ```
 
-Discovery is interactive: the agent asks the human rather than guessing on their behalf, and inspects real code when it needs facts rather than assuming them. It remains progressive — Discovery does not require reading the entire repository, only what's relevant to the ambiguity at hand. The full workflow, the readiness checklist, and how to decide what belongs in `current-task.md`'s design details are defined in [`references/discovery.md`](references/discovery.md).
+Discovery is interactive: the agent asks the human rather than guessing on their behalf, and inspects real code when it needs facts rather than assuming them. It remains progressive — Discovery does not require reading the entire repository, only what's relevant to the ambiguity at hand. The full workflow, the readiness checklist, and how to decide what belongs in `current-task.md`'s design details are defined in [`skill/references/discovery.md`](skill/references/discovery.md).
 
 ## 5. Implementation Phase
 
-Implementation begins once `current-task.md` exists with `Status: READY`. It is typically carried out by a fresh agent with no access to the Discovery conversation that produced the task — `current-task.md` alone must be sufficient. Implementation covers reading the task, reading only the project context it requires, inspecting relevant code, implementing, testing, running a Context Impact Check, updating canonical context where warranted, and committing. The full ordered procedure is defined in [`references/implementation.md`](references/implementation.md).
+Implementation begins once `current-task.md` exists with `Status: READY`. It is typically carried out by a fresh agent with no access to the Discovery conversation that produced the task — `current-task.md` alone must be sufficient. The agent commits the task, executes it (reading only the context it requires, implementing, testing, and running a Context Impact Check), and presents the result to the owner, who reviews it and decides when the task closes. The full procedure is defined in [`skill/references/implementation.md`](skill/references/implementation.md).
 
 ## 6. `current-task.md`
 
@@ -84,22 +84,22 @@ It is not a task-management system, not a task history, and not a step-by-step c
 **Lifecycle:**
 
 ```text
-Discovery
+Discovery (the human decides scope, design details, and branch)
     ↓
-current-task.md (Status: READY)
+current-task.md written (Status: READY)
     ↓
-Implementation
+Start commit: current-task.md committed on the task's branch
     ↓
-Context Impact Check
+Execution, including the Context Impact Check
     ↓
-Commit
+Owner review
     ↓
-Delete current-task.md
+Closing commit deletes current-task.md (approved, or abandoned with the reason)
 ```
 
-The file does not exist before Discovery converges, and it is deleted once its task is committed. The permanent record of what happened is git history, plus whatever canonical context was updated along the way — never an archived or retained `current-task.md`. This lifecycle is stated identically in [`skill/SKILL.md`](skill/SKILL.md), [`references/implementation.md`](references/implementation.md), and [`templates/current-task.md`](templates/current-task.md); it does not vary between them.
+The file does not exist before Discovery converges. From the start commit to the closing commit it lives in git, so any agent or tool can resume the task from its branch. A READY `current-task.md` is never overwritten by a new task — it is closed first. The permanent record is git history plus whatever canonical context changed — never an archived `current-task.md`.
 
-The template defines these sections: `Status`, `Objective`, `Feature`, `Decisions`, `Scope`, `Constraints`, `Acceptance Criteria`, `Design Details`, `Applicable Rules`, `Expected Context Impact`. `Decisions` captures the product/scope/domain-level calls made during Discovery (the *what and why*). `Design Details` is narrower and more technical: it separates choices that were `Decided During Discovery` from those intentionally `Left to the Implementer`, so that two competent agents implementing the same task don't accidentally diverge on something that matters. A design choice only needs to be decided during Discovery when two reasonable implementations could produce materially different behavior, architecture, interfaces, or future constraints — routine function signatures and internal structure are left to the implementer. Field-level guidance lives in [`templates/current-task.md`](templates/current-task.md).
+The template defines these sections: `Status`, `Branch`, `Objective`, `Feature`, `Decisions`, `Scope`, `Constraints`, `Acceptance Criteria`, `Design Details`, `Applicable Rules`, `Expected Context Impact`. `Decisions` captures the product/scope/domain-level calls made during Discovery (the *what and why*). `Design Details` is narrower and more technical: it separates choices that were `Decided During Discovery` from those intentionally `Left to the Implementer`, so that two competent agents implementing the same task don't accidentally diverge on something that matters. A design choice only needs to be decided during Discovery when two reasonable implementations could produce materially different behavior, architecture, interfaces, or future constraints — routine function signatures and internal structure are left to the implementer. Field-level guidance lives in [`skill/templates/current-task.md`](skill/templates/current-task.md).
 
 ## 7. Blueprint
 
@@ -113,13 +113,13 @@ The Blueprint is a project's durable knowledge, split into five categories, each
 | `blueprint/rules.md` | Canonical business/domain rules, precisely worded |
 | `blueprint/decisions.md` | Durable decisions that still constrain future work, with lightweight rationale |
 
-None of these should become a dumping ground for everything an agent happens to learn. Each template in [`templates/blueprint/`](templates/blueprint/) states explicitly what belongs and what doesn't.
+None of these should become a dumping ground for everything an agent happens to learn. Each template in [`skill/templates/blueprint/`](skill/templates/blueprint/) states explicitly what belongs and what doesn't.
 
 ## 8. Features
 
 `features/` describes what the product does, in terms a user or product owner would recognize — not an API reference or an implementation diary. "Users can filter tasks by status" belongs here. "The service now accepts an optional status parameter" generally does not, unless that implementation detail is itself durable knowledge someone would need to know later.
 
-This is the same boundary as Context Impact's product-capability-vs-plumbing distinction (§12), and shares one canonical example between [`templates/features/README.md`](templates/features/README.md) and [`references/context-impact.md`](references/context-impact.md) rather than restating it twice with different wording.
+This is the same boundary as Context Impact's product-capability-vs-plumbing distinction (§12). The practical test and its canonical example are in [`skill/templates/features/README.md`](skill/templates/features/README.md).
 
 ## 9. Progressive Context
 
@@ -150,33 +150,17 @@ Documentation and implementation will sometimes disagree. The rule is: **never s
 - If the conflict is unrelated to the decision currently being made, report it and leave both sides alone.
 - If the conflict blocks the decision currently being made, surface it, explain the competing interpretations, and ask the human to decide.
 
-The canonical format for surfacing a blocking conflict:
-
-```text
-CONTEXT CONFLICT
-
-Documentation says:
-Module A owns payment validation.
-
-Code currently does:
-Module B owns payment validation.
-
-This affects the requested consolidation because consolidation requires choosing one ownership model.
-
-Which behavior should become canonical?
-```
-
-This is the one place this format is written out in full; every other AIR document refers back to "the CONTEXT CONFLICT format in SPEC §11" rather than reproducing it. The detection procedure and the blocking-vs-non-blocking distinction are defined in [`references/context-impact.md`](references/context-impact.md).
+The detection procedure and the format for surfacing a blocking conflict are defined in [`skill/references/context-impact.md`](skill/references/context-impact.md).
 
 ## 12. Context Impact
 
 After implementation, an agent determines whether durable project knowledge has changed:
 
 - **Case A — No durable change.** Implementation changed, but the Blueprint remains accurate. Nothing is updated.
-- **Case B — Durable truth changed safely.** An established business/domain/product fact changed. The affected canonical document is updated as part of the normal, reviewable commit — this does not require a new approval conversation, but it is never a silent, invisible edit either.
+- **Case B — Durable truth changed safely.** An established business/domain/product fact changed. The affected canonical document is updated alongside the code, so the owner reviews both together — no separate approval conversation, but never a silent, invisible edit either.
 - **Case C — Important architectural or domain change.** Architecture, domain ownership, or another significant durable decision changed. The agent identifies the affected documents, proposes the change, obtains human approval, and only then applies it.
 
-Full definitions, worked examples, and the durable-truth boundary (including why a change being user-visible doesn't by itself make it durable) are in [`references/context-impact.md`](references/context-impact.md).
+Full definitions, worked examples, and the durable-truth boundary are in [`skill/references/context-impact.md`](skill/references/context-impact.md).
 
 ## 13. Dependent-Context Checking
 
@@ -184,23 +168,23 @@ Changing one concept can make other documentation stale even though that documen
 
 > Which other canonical documents describe or depend on the concept being changed?
 
-This is not "always read every document," and AIR does not maintain a dependency matrix, registry, or graph to answer it — the check is proportional to the likely impact of the change, reasoned about by the agent each time. A clearly local implementation change warrants a lightweight check; an architectural or ownership change warrants a broader review. See [`references/context-impact.md`](references/context-impact.md) for guidance, not a rulebook.
+This is not "always read every document," and AIR does not maintain a dependency matrix, registry, or graph to answer it — the check is proportional to the likely impact of the change, reasoned about by the agent each time. A clearly local implementation change warrants a lightweight check; an architectural or ownership change warrants a broader review. See [`skill/references/context-impact.md`](skill/references/context-impact.md) for guidance, not a rulebook.
 
 ## 14. Git and History
 
 Git is the project's history mechanism. AIR's own documents are deliberately not history:
 
-- `current-task.md` is not a log of what was tried — it's deleted once its work is committed (§6).
+- `current-task.md` is not a log of what was tried — the commit that closes the task deletes it (§6).
 - `blueprint/decisions.md` holds durable decisions with ongoing bearing, not a duplicate of every commit's rationale.
 - Implementation narrative, alternatives considered, and the reasoning behind a change belong in commit messages, not in canonical documents.
 
-If a document starts accumulating historical narrative, that content should move to git history or be removed.
+Canonical documents describe what is true now. Dated entries, status events ("applied," "deployed," "previously…"), and tombstones of resolved questions belong in commit messages; if a document starts accumulating them, that content should move to git history or be removed.
 
 ## 15. Adoption of AIR in New and Existing Projects
 
-**New projects** can start directly with the structure in §3: an empty or minimal Blueprint, `AGENTS.md` and `PROJECT.md` from `templates/`, and no `current-task.md` until the first Discovery converges.
+**New projects** can start directly with the structure in §3, seeded from `skill/templates/`, with a minimal Blueprint and no `current-task.md` until the first Discovery converges.
 
-**Existing projects** already have architecture notes, domain knowledge, or decision records somewhere — possibly not in AIR's canonical locations. AIR must not overwrite or duplicate that knowledge. Adoption in an existing project means inspecting what already exists, proposing a mapping onto AIR's canonical categories (which may mean pointing at an existing document rather than creating a new one), and asking the human before any reorganization that could destroy or obscure existing information. The operational checklist and example phrasing for this are in [`references/adoption.md`](references/adoption.md).
+**Existing projects** already hold knowledge somewhere — possibly not in AIR's canonical locations. AIR must not overwrite or duplicate it, and must not leave it running as a second, parallel store: each existing knowledge document either becomes the canonical home for a category or is retired. Reorganizations that could destroy or obscure information need the human's approval. The procedure is in [`skill/references/adoption.md`](skill/references/adoption.md).
 
 A project's context can also outlive any single tool: adopting AIR again later, with the same tool or a different one, must reuse the Project Context that already exists rather than recreate it. §19 defines the rule that keeps a tool's own integration separate from that shared context.
 
@@ -208,7 +192,7 @@ Either way, adoption is complete once the project's own files are sufficient for
 
 ## 16. What AIR Intentionally Does Not Provide
 
-AIR v0.1 is deliberately tool-light. It does not include, and should not be extended in v0.1 to include:
+AIR is deliberately tool-light. It does not include, and should not be extended to include:
 
 - an MCP server or any custom daemon;
 - a database, vector database, or project index;
@@ -226,7 +210,7 @@ A project that has adopted AIR must remain understandable and operable even if t
 
 ## 18. Vendor Neutrality
 
-AIR is conceptually independent of any specific AI coding agent, including Claude Code, Codex, Cursor, and OpenCode. This specification and the files under `references/` and `templates/` contain no agent-specific assumptions. `skill/SKILL.md` uses a minimal, generic frontmatter format for practical loadability by compatible tooling, but the framework it describes does not depend on that format, and installation notes for specific agents (where a project chooses to document them) are not part of the core specification. When more than one such tool works on a project over its lifetime, §19 defines how each tool's integration stays separate from the project's shared context.
+AIR is conceptually independent of any specific AI coding agent, including Claude Code, Codex, Cursor, and OpenCode. Nothing in this specification or in `skill/` requires a particular agent; where vendor names appear, they are illustrations only. `skill/SKILL.md` uses a minimal, generic frontmatter format for practical loadability by compatible tooling, but the framework it describes does not depend on that format, and installation notes for specific agents (where a project chooses to document them) are not part of the core specification. When more than one such tool works on a project over its lifetime, §19 defines how each tool's integration stays separate from the project's shared context.
 
 ## 19. Project Context and Tool Integration
 
@@ -243,6 +227,6 @@ The exact mechanism for registering a Skill or configuring an instruction entry 
 
 > An AIR-compatible agent must be able to discover and apply the AIR workflow without requiring the project's durable context to be duplicated for that agent.
 
-Tool-specific mechanisms belong in operational guidance ([`references/adoption.md`](references/adoption.md)), not in this document, consistent with §2's separation of concerns. The objective throughout:
+Tool-specific mechanisms belong in operational guidance ([`skill/references/adoption.md`](skill/references/adoption.md)), not in this document, consistent with §2's separation of concerns. Updating the AIR Skill in a tool replaces the Skill as a whole and never alters a project's context. The objective throughout:
 
 > Adapt the agent to the project, not the project context to every agent.

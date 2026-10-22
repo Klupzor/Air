@@ -1,10 +1,11 @@
 <!--
-This file is the single active implementation contract for the project.
-It does not exist until Discovery has converged (see references/discovery.md
-for the readiness checklist), and it is deleted once this task is
-implemented, tested, and committed. It is not a history and is never
-archived — git history and any updated Blueprint/Features documents are
-the permanent record. See SPEC.md §6 for the full lifecycle.
+The single active implementation contract for the project. It exists
+only between Discovery converging and the commit that closes the task:
+the implementer's start commit adds it on the branch named below, and
+the closing commit (approved or abandoned) deletes it. Never overwrite
+a READY task with a new one — close it first. The record of the task is
+git history; this file is never archived. Full lifecycle: the AIR
+Skill's references/implementation.md.
 -->
 
 # Current Task
@@ -14,10 +15,18 @@ the permanent record. See SPEC.md §6 for the full lifecycle.
 READY
 
 <!--
-READY is the only status this file is ever expected to hold. Before
-Discovery converges, this file simply does not exist — there is no
-"draft" or "in progress" status to track partial convergence; that
-happens in conversation.
+READY is the only status this file ever holds. Before Discovery
+converges the file doesn't exist; partial convergence happens in
+conversation.
+-->
+
+## Branch
+
+<!--
+Decided with the human during Discovery: "new branch <name>" for a
+change large enough to review or discard on its own, otherwise "current
+branch". The implementer makes the start commit here and asks if this
+section is missing or unclear.
 -->
 
 ## Objective
@@ -80,7 +89,7 @@ else — routine signatures, internal structure, naming — belongs under
 
 <!--
 A best-effort note on which canonical documents this task is likely to
-affect (see references/context-impact.md). This is a starting guess
+affect (see the AIR Skill's references/context-impact.md). This is a starting guess
 for the implementer, not a binding commitment — the actual Context
 Impact Check happens after implementation.
 -->

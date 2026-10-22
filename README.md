@@ -22,7 +22,7 @@ If AIR is not already available to the agent, provide the AIR repository:
 
 From there, the agent should be able to run the whole adoption workflow on its own:
 
-1. Acquire AIR — read the Skill and the reference documents it needs from the repository (or use the Skill directly, if it's already available).
+1. Acquire AIR — use the Skill if it's already available, or read the repository's `skill/` folder.
 2. Determine which AI coding tool is currently running.
 3. Detect whether the project already has AIR's Project Context.
 4. Detect whether the current tool is already integrated with it.
@@ -33,29 +33,27 @@ From there, the agent should be able to run the whole adoption workflow on its o
 9. Establish the minimum Tool Integration the current tool still needs.
 10. Validate the result.
 
-If the current tool doesn't let an agent install or register a Skill automatically, adoption still isn't blocked: the agent continues the workflow using the repository's contents and tells you the minimal manual steps needed to enable the Skill for that tool. Skill installation and Project Context adoption are separate concerns — the second never depends on the first succeeding.
+If the tool doesn't let the agent install the Skill, adoption still completes, and the agent tells you the minimal steps to install it yourself. You shouldn't need to reorganize anything by hand. The procedure the agent follows is [`skill/references/adoption.md`](skill/references/adoption.md).
 
-You shouldn't need to reorganize anything by hand. The full acquisition-and-adoption procedure the agent follows is defined in [`references/adoption.md`](references/adoption.md).
-
-Installing the Skill is a convenience the current tool may support, not a prerequisite — AIR adoption means organizing the project around its canonical Project Context, with the Skill as the preferred operational mechanism when it's available. Once adopted, a project's own files are self-sufficient — following AIR never requires this repository to be present at runtime (`SPEC.md` §17).
+The same request is safe to repeat, and works when a second AI coding tool joins the project later: the agent reuses the existing context and adds only what that tool is missing. To pick up a newer AIR release, ask for "Update AIR in this project": the installed Skill is replaced as a whole and your project's context is untouched. Once adopted, a project's own files are self-sufficient — following AIR never requires this repository at runtime (`SPEC.md` §17).
 
 ## What's in this repo
 
 | Path | What it is |
 |---|---|
 | [`SPEC.md`](SPEC.md) | The normative specification of AIR |
-| [`skill/SKILL.md`](skill/SKILL.md) | The Agent Skill that teaches a coding agent to follow AIR |
-| [`references/`](references/) | Detailed, operational guidance for Discovery, Implementation, Context Impact, and Adoption |
-| [`templates/`](templates/) | Fallback starting-point files for manual adoption, or for inspecting AIR's structure directly |
+| [`skill/`](skill/) | The Agent Skill — the unit you install. `SKILL.md` plus its `references/` (operational guidance) and `templates/` (starting files) |
 | [`examples/minimal-project/`](examples/minimal-project/) | A tiny fictional project showing AIR's structure in practice |
+| [`evals/`](evals/) | Scenarios for checking that an agent applies AIR correctly |
+| [`AGENTS.md`](AGENTS.md), [`PROJECT.md`](PROJECT.md), [`blueprint/`](blueprint/) | AIR's own project context — this repository is developed with AIR |
 
 ## Manual setup (fallback)
 
 Templates remain useful — as a fallback when the current tool can't run the adoption workflow automatically, and as a reference when a human wants to see AIR's starting structure directly, without an agent involved.
 
-- **Can't automate adoption:** copy the files under [`templates/`](templates/) into the project root yourself, then use them the same way an agent would — `PROJECT.md` and `AGENTS.md` at the root, `blueprint/` filled in as real knowledge accumulates, `features/` describing what the product does.
-- **Existing project, doing it by hand:** don't overwrite what's already there — map your existing documentation onto AIR's canonical categories the same way [`references/adoption.md`](references/adoption.md) has an agent do it, rather than duplicating it.
-- **Just want to see the shape of it:** [`examples/minimal-project/`](examples/minimal-project/) shows a filled-in, worked example; `templates/` shows the empty starting point.
+- **Can't automate adoption:** copy `AGENTS.md`, `PROJECT.md`, and `blueprint/` from [`skill/templates/`](skill/templates/) into the project root, replace the blueprint guidance with real knowledge as it accumulates, and add one file per product capability under `features/`.
+- **Existing project, doing it by hand:** don't overwrite what's already there — map your existing documentation onto AIR's categories the way [`skill/references/adoption.md`](skill/references/adoption.md) has an agent do it.
+- **Just want to see the shape of it:** [`examples/minimal-project/`](examples/minimal-project/) shows a filled-in example; `skill/templates/` shows the starting point.
 
 This is a fallback path, not the recommended one — prefer asking an agent to adopt AIR, per the Quick Start above.
 
@@ -64,7 +62,7 @@ This is a fallback path, not the recommended one — prefer asking an agent to a
 | Idea | Summary | Details |
 |---|---|---|
 | Discovery | Ambiguity gets resolved in conversation before anything durable is written | [`SPEC.md` §4](SPEC.md#4-discovery-phase) |
-| `current-task.md` | The single, temporary implementation contract — created once Discovery converges, deleted once committed | [`SPEC.md` §6](SPEC.md#6-current-taskmd) |
+| `current-task.md` | The single, temporary implementation contract — committed when the task starts, deleted by the commit that closes it | [`SPEC.md` §6](SPEC.md#6-current-taskmd) |
 | Blueprint | Durable project knowledge: architecture, domain, modules, rules, decisions | [`SPEC.md` §7](SPEC.md#7-blueprint) |
 | Features | What the product does, in product terms — not an API reference | [`SPEC.md` §8](SPEC.md#8-features) |
 | Context Impact | After implementing, decide whether durable knowledge actually changed | [`SPEC.md` §12](SPEC.md#12-context-impact) |

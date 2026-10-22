@@ -20,4 +20,4 @@ A flat, identified list works well:
 <Precise statement of the rule.>
 ```
 
-Keep each rule's wording stable once other documents start referencing it — if a rule's *meaning* changes, that's exactly the kind of durable change a Context Impact Check (see `references/context-impact.md`) should catch and propagate.
+Keep each rule's wording stable once other documents start referencing it — if a rule's *meaning* changes, that's exactly the kind of durable change a Context Impact Check (see the AIR Skill's `references/context-impact.md`) should catch and propagate.
