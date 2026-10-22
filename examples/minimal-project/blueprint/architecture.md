@@ -16,7 +16,7 @@ A CLI command (`add`, `list`, `done`) is parsed by `cli.py`, which calls the cor
 
 ## Key technologies
 
-Python standard library only (`dataclasses`, `enum`, `argparse`). No external dependencies, by design (see `blueprint/decisions.md#d1`).
+Python standard library only (`dataclasses`, `enum`, `argparse`). No external dependencies, by design (see D1 in `blueprint/decisions.md`).
 
 ## External dependencies
 

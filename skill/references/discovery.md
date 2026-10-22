@@ -1,8 +1,8 @@
 # Discovery
 
-This document is the full elaboration of AIR's Discovery phase (see `SPEC.md` §4 for the conceptual summary). It's the canonical source for what to do at each step, and for when Discovery is actually finished.
+How an ambiguous or under-specified request becomes a resolved, implementable intent — before anything durable is written down. Discovery happens in conversation, with the human who made the request, and ends when the readiness checklist below holds.
 
-Discovery is how an ambiguous or under-specified request becomes a resolved, implementable intent — before anything durable is written down. It happens in conversation, with the human who made the request.
+If a READY `current-task.md` already exists, a new Discovery must not overwrite it. Raise it with the owner: the existing task gets implemented or abandoned and closed (see [`implementation.md`](implementation.md), step 5) before a new one is written.
 
 ## The flow
 
@@ -36,7 +36,7 @@ Create current-task.md
 
 **Identify ambiguity.** Compare the request against what you now know. Where could two reasonable interpretations lead to different outcomes? That's material ambiguity — the kind Discovery exists to resolve. Not every request has any; a small, unambiguous change can skip straight to Implementation (see "What Discovery Is Not," below).
 
-**Ask questions.** Put the ambiguity to the human directly. Do not guess a material requirement and do not simulate what the human would probably say — if it materially affects product, domain, architecture, scope, or behavior, it's their call (see `SPEC.md` §10).
+**Ask questions.** Put the ambiguity to the human directly. Do not guess a material requirement and do not simulate what the human would probably say — if it materially affects product, domain, architecture, scope, or behavior, it's their call.
 
 **Explore alternatives.** For anything with a real trade-off, lay out the reasonable options and their consequences, rather than silently picking one.
 
@@ -46,7 +46,7 @@ Create current-task.md
 
 **Readiness check.** Before writing anything durable, verify the task actually meets the bar below. If it doesn't, that's a sign Discovery isn't finished, not a sign to write a task file anyway.
 
-**Create current-task.md.** Only now does the implementation contract get written, from `templates/current-task.md`, with `Status: READY`.
+**Create current-task.md.** Only now does the implementation contract get written, from [`../templates/current-task.md`](../templates/current-task.md), with `Status: READY`.
 
 ## Discovery Readiness checklist
 
@@ -60,6 +60,7 @@ A task is ready for `current-task.md` only when all of the following hold:
 - Constraints are understood.
 - Acceptance criteria can be stated concretely.
 - Every design detail that could materially diverge between implementers is either decided or explicitly delegated (see the next section).
+- The branch is decided: a new branch (named) when the change is large enough to review or discard on its own, or the current branch. The human confirms it.
 - No material unresolved question remains.
 
 Do not create a `READY` task prematurely. If any of the above is still open, stay in conversation.
