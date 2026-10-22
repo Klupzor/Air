@@ -7,7 +7,7 @@ This frontmatter is metadata for agent tooling that knows how to load skills thi
 
 # AIR Skill
 
-AIR Skill version: 0.2.0
+AIR Skill version: 0.2.1
 
 AIR (AI-Readable) organizes a project's durable knowledge into a small set of canonical locations so an agent can progressively discover what it needs instead of reading everything. This Skill tells you what to do; the operational detail for each phase lives in this Skill's `references/`, loaded only when its trigger below is met. This folder is complete on its own — `SPEC.md` in the AIR repository holds the rationale and is never needed to operate.
 
